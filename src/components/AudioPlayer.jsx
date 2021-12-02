@@ -3,10 +3,9 @@ import { Input, Button } from '@chakra-ui/react'
 
 export default function AudioPlayer(props) {
 
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext())()
     const audioElement = useRef(null)
     const [isPlaying, setIsPlaying] = useState(false)
-
+    const audioCtx = props.audioCtx
 
     const handleFileInput = (e) => {
         props.setAudioSrc(URL.createObjectURL(e.target.files[0]))

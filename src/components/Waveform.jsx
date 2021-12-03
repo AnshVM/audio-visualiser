@@ -17,7 +17,7 @@ export default function Waveform(props) {
     }
 
     const reduceData = (data,canvas) => {
-        const requiredLength = canvas.width/2
+        const requiredLength = canvas.width
         const blockSize = Math.floor(data.length/requiredLength)
         let reducedData = []
         let blockSum=0
@@ -28,7 +28,6 @@ export default function Waveform(props) {
                 blockSum=0
             }
         }
-        console.log(reducedData);
         return reducedData
     }
 
@@ -39,8 +38,8 @@ export default function Waveform(props) {
         ctx.translate(0,150)
         ctx.strokeStyle = 'white'
         let currentx=0
-        for(let i=0;i<heights.length;i++){
-            const obj = drawLine(ctx,currentx,heights[i]*100)
+        for(let i=0;i< heights.length;i++){
+            const obj = drawLine(ctx,currentx,heights[i]*200)
             currentx = obj.currentx
         }
     }
@@ -52,7 +51,6 @@ export default function Waveform(props) {
             .then(res => res.arrayBuffer())
             .then(arrayBuffer => audioCtx.decodeAudioData(arrayBuffer))
             .then(audioBuffer => {
-                console.log(audioBuffer)
                 generateWaveform(audioBuffer.getChannelData(0))
             })
     }, [props.audioSrc])

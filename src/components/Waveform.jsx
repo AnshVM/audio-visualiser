@@ -6,7 +6,6 @@ export default function Waveform(props) {
     const audioCtx = props.audioCtx
     const [imgurl, setImgurl] = useState()
     let duration = useRef()
-    let interval = useRef()
 
     const drawLine = (ctx, currentx, height) => {
         ctx.beginPath();
@@ -36,7 +35,6 @@ export default function Waveform(props) {
     }
 
     const generateWaveform = (heights) => {
-        console.log('In generete wave func');
         const canvas = document.getElementById('canvas')
         heights = reduceData(heights, canvas)
         const ctx = canvas.getContext('2d')
@@ -53,16 +51,13 @@ export default function Waveform(props) {
     }
 
 
-    const drawHead = (ctx, headPos) => {
-        ctx.clearRect(0,0,1920,150)
-        ctx.clearRect(0,0,1920,-150)
-        ctx.strokeStyle = 'red'
-        ctx.moveTo(headPos, 0)
-        ctx.beginPath()
-        ctx.lineTo(headPos, 150)
-        ctx.lineTo(headPos, -150)
-        ctx.stroke()
+    const movePlayHead = () => {
+        const playHead = document.getElementById('playHead')
+        const transitionDuration = Math.floor(duration.current*1000)
+        playHead.style.transition = `transform ${transitionDuration}ms linear`
+        playHead.style.transform = 'translate(1920px)'
     }
+
     useEffect(() => {
         if (!props.audioSrc) return
         fetch(props.audioSrc)
@@ -78,43 +73,28 @@ export default function Waveform(props) {
         if (!imgurl) return
 
         const canvas = document.getElementById('canvas')
-        canvas.style.backgroundImage = `url('${imgurl}')`
-        canvas.style.backgroundColor = 'black'
-        const ctx = canvas.getContext('2d')
-        console.log(canvas.height);
-        drawHead(ctx, 0)
+        canvas.remove()
+        const waveform = document.getElementById('waveform')
+        waveform.style.backgroundImage = `url('${imgurl}')`
 
     }, [imgurl])
 
     useEffect(() => {
 
-        if(!props.isPlaying === undefined) return 
-
-        if(!props.isPlaying === false){
-            if(interval.current === null) return 
-            clearInterval(interval.current)
-        }
-
-        if (props.isPlaying === true) {
-            const canvas = document.getElementById('canvas')
-            const ctx = canvas.getContext('2d')
-            let headPos = 0
-            interval = setInterval(() => {
-                drawHead(ctx, headPos)
-                headPos = headPos + canvas.width / (duration.current * 100)
-            }, 10)
+        if(props.isPlaying === true) {
+            movePlayHead()
         }
 
     }, [props.isPlaying])
 
-    //Wpx,Tms 1ms -> W/T
-
-
-
     return (
         <div>
             <h1>Waveform</h1>
+            <div style={{backgroundColor:"black",width:'1920px',height:'300px'}} id="waveform">
+                <div style={{width:'1px',height:'300px',backgroundColor:'red'}} id="playHead"></div>
+            </div>
             <canvas id='canvas' width="1920px" height="300px"></canvas>
+
         </div>
     )
 }

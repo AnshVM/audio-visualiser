@@ -187,8 +187,8 @@ export default function Waveform(props) {
 
 
     return (
-        <div >
-            <h1>Waveform</h1>
+        <div style={{marginTop:20,marginLeft:10}}>
+            <h1 style={{color:'white'}}>Waveform</h1>
 
             <Rnd
                 maxWidth={rndState.width}

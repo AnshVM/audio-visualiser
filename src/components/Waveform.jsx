@@ -147,6 +147,7 @@ export default function Waveform(props) {
 
     }, [imgurl])
 
+
     useEffect(() => {
 
         if (props.isPlaying === false && window.getComputedStyle(playhead.current).getPropertyValue('margin-left') !== '0px') {
@@ -181,7 +182,6 @@ export default function Waveform(props) {
             console.log(duration.current)
         }
     }, [props.audioEnded])
-
 
 
 

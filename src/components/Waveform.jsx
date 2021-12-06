@@ -6,12 +6,11 @@ export default function Waveform(props) {
 
     const WIDTH = window.screen.width - 100
     const WIDTHPX = WIDTH+"px"
-    console.log(WIDTH)
-    console.log(WIDTHPX)
     const audioCtx = props.audioCtx
     const [imgurl, setImgurl] = useState()
     const [rndState, setRndState] = useState({ x: 0, y: 0, width: WIDTHPX, height: "300px" })
     const [state, setState] = useState(0)
+    const [newCanvas, setNewCanvas] = useState(true)
     let duration = useRef()
     let startTime = useRef()
     let pauseTime = useRef()
@@ -54,7 +53,12 @@ export default function Waveform(props) {
         const canvas = document.getElementById('canvas')
         heights = reduceData(heights, canvas)
         const ctx = canvas.getContext('2d')
-        ctx.translate(0, 150)
+        ctx.clearRect(0, 0, WIDTH, -150)
+        ctx.clearRect(0, 0, WIDTH, 150)
+        if (newCanvas===true) {
+            ctx.translate(0, 150)
+            setNewCanvas(false)
+        }
         ctx.strokeStyle = 'white'
         let currentx = 0
         for (let i = 0; i < heights.length; i++) {
@@ -145,7 +149,9 @@ export default function Waveform(props) {
         if (!imgurl) return
 
         const canvas = document.getElementById('canvas')
-        canvas.remove()
+        canvas.style.visibility = 'none'
+        const ctx = canvas.getContext('2d')
+
         const waveform = document.getElementById('waveform')
         waveform.style.backgroundImage = `url('${imgurl}')`
 
@@ -188,7 +194,7 @@ export default function Waveform(props) {
     }, [props.audioEnded])
 
 
-
+    console.log(audioBufferRef.current)
 
     return (
         <div style={{marginTop:20,marginLeft:10}}>
@@ -202,7 +208,7 @@ export default function Waveform(props) {
                 onDragStop={(e, d) => { setRndState({ x: d.x, y: d.y, height: rndState.height, width: rndState.width }) }}
                 onResizeStop={handleResize}
                 disableDragging={true}
-                enableResizing={{ left: !props.isPlaying, right: !props.isPlaying }}
+                enableResizing={{ left: !props.isPlaying && audioBufferRef.current!==undefined, right: !props.isPlaying && audioBufferRef.current!==undefined}}
             >
                 <div style={{ backgroundColor: "black" }}>
                     <div ref={playhead} style={{ width: '1px', height: '300px', backgroundColor: 'red', position: 'relative' }} id="playHead"></div>

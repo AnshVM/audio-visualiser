@@ -23,3 +23,19 @@ Once the data is reduced the waveform is generated using canvas.
 ### How does trimming work: 
 
 Let's say the user trims the audio from the right. A new audio buffer will be created which copies data from the previous buffer starting from index 0 to the audio index till which the audio is trimmed. **This index is simply calculated using the ratio of old width and new width of the waveform.**
+
+        if (direction === 'left') {
+            const startIndex = Math.floor((audioBuffer.length - 1) - (newWidth * (audioBuffer.length - 1) / initialWidth))
+            const oldAudioBufferData = audioBuffer.getChannelData(0)
+            for (let i = 0; i < length; i++) {
+                nowBuffering[i] = oldAudioBufferData[i + startIndex]
+            }
+        }
+
+        if (direction === 'right') {
+            const oldAudioBufferData = audioBuffer.getChannelData(0)
+            for (let i = 0; i < length; i++) {
+                nowBuffering[i] = oldAudioBufferData[i]
+            }
+        }
+

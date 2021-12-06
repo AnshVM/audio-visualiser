@@ -4,9 +4,13 @@ import { Rnd } from 'react-rnd'
 
 export default function Waveform(props) {
 
+    const WIDTH = window.screen.width - 100
+    const WIDTHPX = WIDTH+"px"
+    console.log(WIDTH)
+    console.log(WIDTHPX)
     const audioCtx = props.audioCtx
     const [imgurl, setImgurl] = useState()
-    const [rndState, setRndState] = useState({ x: 0, y: 0, width: "1900px", height: "300px" })
+    const [rndState, setRndState] = useState({ x: 0, y: 0, width: WIDTHPX, height: "300px" })
     const [state, setState] = useState(0)
     let duration = useRef()
     let startTime = useRef()
@@ -58,8 +62,8 @@ export default function Waveform(props) {
             currentx = obj.currentx
         }
         setImgurl(canvas.toDataURL())
-        ctx.clearRect(0, 0, 1900, -150)
-        ctx.clearRect(0, 0, 1900, 150)
+        ctx.clearRect(0, 0, WIDTH, -150)
+        ctx.clearRect(0, 0, WIDTH, 150)
     }
 
     const movePlayHead = () => {
@@ -205,9 +209,9 @@ export default function Waveform(props) {
                 </div>
             </Rnd>
 
-            <div id="waveform" style={{ width: 1900, height: 300, zIndex: 2, position: 'fixed' }}></div>
+            <div id="waveform" style={{ width: WIDTH, height: 300, zIndex: 2, position: 'fixed' }}></div>
 
-            <canvas id='canvas' width="1900px" height="300px"></canvas>
+            <canvas id='canvas' width={WIDTHPX} height="300px"></canvas>
 
         </div>
     )
